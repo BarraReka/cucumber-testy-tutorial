@@ -8,26 +8,28 @@ import com.sdl.selenium.web.utils.Utils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class PreferencesView {
+public class PreferencesView extends WebLocator {
 
     private Button preferencesBtn = new Button().setText("Preferences");
 
-    private WebLocator win = new WebLocator().setId("preferences-win");
+    public PreferencesView(){
+        setId("preferences-win");
+    }
 
-    private Button xBtn = new Button(win).setClasses("close");
-
-
-    private TextField passwordField = new TextField(win).setName("password");
-    private TextField newPasswordField = new TextField(win).setName("newPassword");
-    private TextField confirmPasswordField = new TextField(win).setName("newPasswordRepeat");
-
-    private Button saveBtn = new Button(win).setText("Save");
+    private Button xBtn = new Button(this).setClasses("close");
 
 
-    private WebLocator statusMsg = new WebLocator(win).setClasses("status-msg");
+    private TextField passwordField = new TextField(this).setName("password");
+    private TextField newPasswordField = new TextField(this).setName("newPassword");
+    private TextField confirmPasswordField = new TextField(this).setName("newPasswordRepeat");
+
+    private Button saveBtn = new Button(this).setText("Save");
 
 
-    private Button closeBtn = new Button(win).setText("Close");
+    private WebLocator statusMsg = new WebLocator(this).setClasses("status-msg");
+
+
+    private Button closeBtn = new Button(this).setText("Close");
 
 
     public void changePassword(String pass, String newPass, String repeatPass) {
@@ -50,6 +52,7 @@ public class PreferencesView {
     }
 
 
-
-
+    public String getStatusMsg() {
+        return statusMsg.getText();
+    }
 }
