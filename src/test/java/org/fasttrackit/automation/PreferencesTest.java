@@ -1,6 +1,7 @@
 package org.fasttrackit.automation;
 
 import automation.PreferencesPage;
+import automation.PreferencesView;
 import com.sdl.selenium.web.utils.Utils;
 import org.fasttrackit.util.TestBase;
 import org.openqa.selenium.By;
@@ -14,10 +15,11 @@ import static org.junit.Assert.assertThat;
 
 public class PreferencesTest extends TestBase {
 
-    private PreferencesPage page;
-    public PreferencesTest() {
-        page = PageFactory.initElements(driver, PreferencesPage.class);
-    }
+    private PreferencesView page = new PreferencesView();
+//    private PreferencesPage page;
+//    public PreferencesTest() {
+//    page = PageFactory.initElements(driver, PreferencesPage.class);
+//    }
 
     @Test
     public void preferencesWindowShouldCloseTest() {
