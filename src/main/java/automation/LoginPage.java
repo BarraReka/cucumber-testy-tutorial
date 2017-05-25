@@ -1,5 +1,6 @@
 package automation;
 
+import com.sdl.selenium.web.utils.Utils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -11,6 +12,14 @@ public class LoginPage {
     public WebElement passwordElement;
     @FindBy(id="loginButton")
     public WebElement loginBtn;
+
+    public void login (String user, String pass){
+        userNameElement.sendKeys(user);
+        passwordElement.sendKeys(pass);
+        loginBtn.click();
+        Utils.sleep(400);
+    }
+
 
 
 
