@@ -1,9 +1,11 @@
 package org.fasttrackit.automation;
 
+import automation.PreferencesPage;
 import com.sdl.selenium.web.utils.Utils;
 import org.fasttrackit.util.TestBase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -12,29 +14,30 @@ import static org.junit.Assert.assertThat;
 
 public class PreferencesTest extends TestBase {
 
+    private PreferencesPage page;
+    public PreferencesTest() {
+        page = PageFactory.initElements(driver, PreferencesPage.class);
+    }
+
     @Test
     public void preferencesWindowShouldCloseTest() {
 
-        doLogin("eu@fast.com", "eu.pass");
-        WebElement preferencesBtn = driver.findElement(By.cssSelector(".navbar-header button"));
-        preferencesBtn.click();
+        doLogin(USER_NAME, PASSWORD);
 
-        Utils.sleep(400);
-        //WebElement closeBtn =driver.findElement(By.cssSelector("#preferences-win .modal-footer button"));
-        //closeBtn.click();
-        WebElement xBtn = driver.findElement(By.cssSelector("#preferences-win button.close"));
-        xBtn.click();
+        page.open();
+
+        page.close();
 
     }
 
     @Test
     public void tryToChangePasswordWithInvalidPreviousPasswordTest() {
 
-        changePassword("eu.pass", "new.pass", "newmismatch.pass");
+        changePassword("wrong.pass", "new.pass", "new.pass");
 
         WebElement statusMsg = driver.findElement(By.xpath("//*[@id=\"preferences-win\"]//*[@class='status-msg']"));
         String message = statusMsg.getText();
-        assertThat(message, is("Password does not match the confirm password!"));
+        assertThat(message, is("Your preview password is incorrect!"));
     }
 
     @Test
@@ -50,7 +53,7 @@ public class PreferencesTest extends TestBase {
     @Test
     public void successChangePasswordTest() {
 
-        changePassword("eu.pass", "new.pass", "new.pass");
+        changePassword(PASSWORD, "new.pass", "new.pass");
 
         WebElement statusMsg = driver.findElement(By.xpath("//*[@id=\"preferences-win\"]//*[@class='status-msg']"));
         String message = statusMsg.getText();
@@ -58,34 +61,30 @@ public class PreferencesTest extends TestBase {
 
 
 
-        WebElement xBtn = driver.findElement(By.cssSelector("#preferences-win button.close"));
-        xBtn.click();
-        Utils.sleep(400);
+        page.close();
         WebElement logoutBtn = driver.findElement(By.linkText("Logout"));
         logoutBtn.click();
 
-        Utils.sleep(400);
-        doLogin("eu@fast.com", "new.pass");
-        Utils.sleep(400);
+        PASSWORD="new.pass";
+        doLogin(USER_NAME, PASSWORD);
         logoutBtn = driver.findElement(By.linkText("Logout"));
         logoutBtn.click();
+
+        //revert to old password
+        changePassword(PASSWORD, "eu.pass", "eu.pass");
+        PASSWORD="eu.pass";
     }
 
     private void changePassword(String pass, String newPass, String repeatPass) {
-        doLogin("eu@fast.com", "eu.pass");
-        WebElement preferencesBtn = driver.findElement(By.cssSelector(".navbar-header button"));
-        preferencesBtn.click();
-        Utils.sleep(500);
-        WebElement passwordField = driver.findElement(By.xpath("//*[@id='preferences-win']//input[@name='password']"));
-        WebElement newPasswordField = driver.findElement(By.xpath("//*[@id=\"preferences-win\"]//input[@name=\"newPassword\"]"));
-        WebElement confirmPasswordField = driver.findElement(By.xpath("//*[@id=\"preferences-win\"]//input[@name=\"newPasswordRepeat\"]"));
-        WebElement saveBtn = driver.findElement(By.xpath("//*[@id=\"preferences-win\"]//button[text()=\"Save\"]"));
+        doLogin(USER_NAME, PASSWORD);
 
-        passwordField.sendKeys(pass);
-        newPasswordField.sendKeys(newPass);
-        confirmPasswordField.sendKeys(repeatPass);
-        saveBtn.click();
+        page.open();
+
+
+       page.changePassword(pass, newPass, repeatPass);
+
     }
+
 }
 
 
