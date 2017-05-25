@@ -1,6 +1,7 @@
 package org.fasttrackit.util;
 
 import automation.LoginPage;
+import automation.LoginView;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,11 +20,13 @@ public abstract class TestBase {
 
     public static WebDriver driver;
 
-    protected LoginPage loginPage;
-    public TestBase(){
-        System.out.println("TestBase constructor");
-        loginPage =  PageFactory.initElements(driver, LoginPage.class);
-    }
+
+    protected LoginView loginPage=new LoginView();
+    //protected LoginPage loginPage;
+    //public TestBase(){
+    //   System.out.println("TestBase constructor");
+    //    loginPage =  PageFactory.initElements(driver, LoginPage.class);
+    //}
 
     static {
         startSuite();
