@@ -1,9 +1,8 @@
 package org.fasttrackit.automation;
-import com.sdl.selenium.web.utils.Utils;
 import org.fasttrackit.util.TestBase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -13,26 +12,34 @@ public class LoginTest extends TestBase{
 
     @Test
     public void validLoginTest() {
-      doLogin("eu@fast.com","eu.pass" );
+      doLogin(USER_NAME, PASSWORD);
 
         WebElement logoutBtn = driver.findElement(By.linkText("Logout"));
         logoutBtn.click();
     }
 
-    @Test
-    public void invalidUserAndPasswordTest(){
-        doLogin("wrong@user", "wrong.pass");
+    @Test(dataProvider = "invalidUsers")
+    public void invalidLoginTest(String user, String pass, String expectedMessage){
+        doLogin(user, pass);
 
         WebElement errorMsg = driver.findElement(By.className("error-msg"));
         String message = errorMsg.getText();
         System.out.println();
 
-       assertThat(message, is ("Invalid user or password!"));
+        assertThat(message, is (expectedMessage));
+    }
+
+    @DataProvider
+    public Object[][] invalidUsers(){
+        return new Object[][]{
+                {"wrong@user", "wrong.pass", "Invalid user or password!"},
+                {"empty.pass@user", "", "Please enter your password!"},
+                {"", "empty.user", "Please enter your email!"},
+                {"", "", "Please enter your email!"}
+        };
 
     }
 
-
-
-
+     // "wrong@user", "wrong.pass", "Invalid user or password!"
 
 }
