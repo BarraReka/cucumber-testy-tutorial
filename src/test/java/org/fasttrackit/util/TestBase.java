@@ -2,6 +2,8 @@ package org.fasttrackit.util;
 
 import automation.LoginPage;
 import automation.LoginView;
+import com.sdl.selenium.web.utils.PropertiesReader;
+import com.sdl.selenium.web.utils.Utils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import com.sdl.selenium.utils.config.WebDriverConfig;
 import com.sdl.selenium.web.Browser;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 
 public abstract class TestBase {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestBase.class);
@@ -46,5 +50,13 @@ public abstract class TestBase {
 
 
         loginPage.login(user, pass);
+    }
+
+    @AfterMethod
+    public void end(ITestResult result){
+        if (!result.isSuccess()){
+            LOGGER.warn("Test Failed: " + result.getName());
+            Utils.getScreenShot(result.getName(), PropertiesReader.RESOURCES_PATH + "\\result\\screens\\");
+        }
     }
 }
