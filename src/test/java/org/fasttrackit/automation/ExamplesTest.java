@@ -1,8 +1,12 @@
 package org.fasttrackit.automation;
 
+import com.sdl.selenium.bootstrap.form.MultiSelect;
+import com.sdl.selenium.bootstrap.form.SelectPicker;
+import com.sdl.selenium.utils.config.WebDriverConfig;
 import com.sdl.selenium.web.SearchType;
 import com.sdl.selenium.web.WebLocator;
 import com.sdl.selenium.web.form.CheckBox;
+import com.sdl.selenium.web.form.MultipleSelect;
 import com.sdl.selenium.web.table.Cell;
 import com.sdl.selenium.web.table.Row;
 import com.sdl.selenium.web.table.Table;
@@ -71,6 +75,86 @@ public class ExamplesTest extends TestBase{
         //select6.click();
 
     }
+
+    WebLocator stopProcessLabel = new WebLocator().setText("Stop the process?", SearchType.CHILD_NODE);
+    WebLocator enterLabel =  new WebLocator().setText("Label with Enter.", SearchType.CHILD_NODE);
+
+
+    CheckBox stopCheckBox = new CheckBox(stopProcessLabel);
+    CheckBox enterCheckBox = new CheckBox(enterLabel);
+
+    @Test
+    public void checkboxLabelTest(){
+        doLogin(USER_NAME, PASSWORD);
+        stopProcessLabel.click();
+        enterLabel.click();
+
+        stopCheckBox.click();
+        enterCheckBox.click();
+
+    }
+
+    @Test
+    public void checkboxTest(){
+        doLogin(USER_NAME, PASSWORD);
+
+        CheckBox stopCheckBox = new CheckBox().setLabel("Stop the process?", SearchType.CHILD_NODE).setLabelPosition("//");
+        CheckBox enterCheckbox = new CheckBox().setLabel("Label with Enter.", SearchType.CHILD_NODE).setLabelPosition("//");
+
+
+        stopCheckBox.click();
+        enterCheckBox.click();
+
+    }
+
+    @Test
+    public void multiSelect() {
+        doLogin(USER_NAME, PASSWORD);
+
+        SelectPicker techPicker = new SelectPicker().setLabel("Tech:");
+        techPicker.select("Manual");
+
+        MultiSelect multiSelect = new MultiSelect().setLabel("Source:");
+        multiSelect.select("Cheese","Tomatoes");
+
+    }
+
+
+
+        WebLocator iframe = new WebLocator().setTag("iframe");
+        WebLocator gridsHeader = new WebLocator().setText("Grids").setRenderMillis(20);
+        WebLocator gridDataBinding = new WebLocator().setText("Grid Data Binding");
+        WebLocator expectedTitle = new WebLocator().setText("Data Binding Example");
+        WebLocator bufferedStore = new WebLocator().setText("Grid with Buffered Store");
+
+    @Test
+    public void senchaGridExampleTest(){
+
+       driver.get("http://examples.sencha.com/extjs/6.2.0/examples/");
+
+       iframe.waitToRender();
+       driver.switchTo().frame(iframe.getWebElement());
+
+       gridsHeader.click();
+       gridDataBinding.click();
+
+       WebDriverConfig.switchToLastTab();
+       expectedTitle.assertReady();
+
+       WebLocator cell = new WebLocator().setText("Are You Afraid of the Dark?");
+       cell.click();
+
+       driver.close();
+       WebDriverConfig.switchToFirstTab();
+
+       driver.switchTo().frame(iframe.getWebElement());
+       bufferedStore.click();
+       WebDriverConfig.switchToLastTab();
+    }
+
+
+
+
 
     public static void main(String[] args) {
       ExamplesTest test= new ExamplesTest();
